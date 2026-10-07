@@ -29,12 +29,23 @@ def _judge_agent() -> Agent:
     )
 
 
-def judge(prompt: str) -> str:
-    """Ask the judge model a classification question and return its upper-cased answer.
+@lru_cache(maxsize=1)
+def _strong_judge_agent() -> Agent:
+    return Agent(
+        name="Guardrail Judge (strong)",
+        model=main_model(),
+        instructions="You are a careful evaluator. Follow the requested output format exactly.",
+        telemetry=False,
+    )
+
+
+def judge(prompt: str, strong: bool = False) -> str:
+    """Ask a judge model and return its upper-cased answer. `strong=True` uses the main model,
+    for checks the cheap judge model gets wrong (e.g. claim-level grounding).
 
     Raises RuntimeError when the call fails, so each guardrail can decide whether to fail open or closed.
     """
-    resp = _judge_agent().run(prompt)
+    resp = (_strong_judge_agent() if strong else _judge_agent()).run(prompt)
     content = resp.content if isinstance(resp.content, str) else ""
     if resp.status == RunStatus.error or not content:
         raise RuntimeError(f"judge call failed: {content or 'empty response'}")

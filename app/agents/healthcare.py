@@ -50,7 +50,7 @@ BANNED_KEYWORDS = ["drug synthesis", "synthesize drugs", "make meth", "weapon", 
 
 USERS = {
     "guest_01": {"role": "guest", "name": "Visitor"},
-    "patient_01": {"role": "patient", "name": "Alex Kim"},
+    "patient_01": {"role": "patient", "name": "Iliass Achehboun"},
     "staff_01": {"role": "staff", "name": "Dr. Rivera"},
 }
 ROLE_PERMISSIONS = {
